@@ -2,8 +2,11 @@ package com.example.j053.parsetagram;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -20,12 +23,15 @@ import com.parse.SaveCallback;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
     // TODO: change
-    public static final String IMAGE_PATH = "/storage/emulated/0/DCIM/Camera/IMG_20180710_131339.jpg";
+    private String mImagePath;
     private EditText etDescription;
     private Button btnCreate;
     private Button btnRefresh;
@@ -41,6 +47,7 @@ public class HomeActivity extends AppCompatActivity {
 
         etDescription = findViewById(R.id.etDescription);
         btnCreate = findViewById(R.id.btnCreate);
+        btnCreate.setEnabled(false);
         btnRefresh = findViewById(R.id.btnRefresh);
         btnCapture = findViewById(R.id.btnCapture);
         btnLogout = findViewById(R.id.btnLogout);
@@ -53,7 +60,23 @@ public class HomeActivity extends AppCompatActivity {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 // Create a File reference to access to future access
                 if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(intent, REQUEST_CODE);
+                    // Create the File where the photo should go
+                    File photoFile = null;
+                    try {
+                        photoFile = createImageFile();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    // Continue only if the File was successfully created
+                    if (photoFile != null) {
+
+                        Uri photoURI = FileProvider.getUriForFile(HomeActivity.this,
+                                "com.example.android.fileprovider",
+                                photoFile);
+
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                        startActivityForResult(intent, REQUEST_CODE);
+                    }
                 }
             }
         });
@@ -82,7 +105,8 @@ public class HomeActivity extends AppCompatActivity {
                 final String description = etDescription.getText().toString();
                 final ParseUser user = ParseUser.getCurrentUser();
 
-                final File file = new File(getApplicationContext().getFilesDir(), "temp.jpg");
+                // final File file = new File(getApplicationContext().getFilesDir(), "temp.jpg");
+                final File file = new File(mImagePath);
                 final ParseFile parseFile = new ParseFile(file);
 
                 createPost(description, parseFile, user);
@@ -95,10 +119,13 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            ivPreview.setImageBitmap(imageBitmap);
-            persistImage(imageBitmap, "temp");
+            btnCreate.setEnabled(true);
+            // Bundle extras = data.getExtras();
+            // Bitmap imageBitmap = (Bitmap) extras.get("data");
+            // ivPreview.setImageBitmap(imageBitmap);
+            // persistImage(imageBitmap, "temp");
+            ///// Uri uri = extras.get(MediaStore.EXTRA_OUTPUT);
+            ivPreview.setImageURI(Uri.parse(mImagePath));
         }
     }
 
@@ -153,6 +180,22 @@ public class HomeActivity extends AppCompatActivity {
         } catch (Exception e) {
             Log.e(getClass().getSimpleName(), "Error writing bitmap", e);
         }
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mImagePath = image.getAbsolutePath();
+        return image;
     }
 
 }
