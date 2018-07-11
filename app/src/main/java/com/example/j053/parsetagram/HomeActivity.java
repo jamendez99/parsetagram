@@ -1,7 +1,6 @@
 package com.example.j053.parsetagram;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -22,9 +21,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -52,6 +49,7 @@ public class HomeActivity extends AppCompatActivity {
         btnCapture = findViewById(R.id.btnCapture);
         btnLogout = findViewById(R.id.btnLogout);
         ivPreview = findViewById(R.id.ivPreview);
+
 
         btnCapture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,6 +108,8 @@ public class HomeActivity extends AppCompatActivity {
                 final ParseFile parseFile = new ParseFile(file);
 
                 createPost(description, parseFile, user);
+                etDescription.setText("");
+                HomeActivity.this.recreate();
             }
         });
 
@@ -167,6 +167,8 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    // Method not used anymore. Used before to create the thumbnail.
+    /*
     private void persistImage(Bitmap bitmap, String name) {
         File filesDir = getApplicationContext().getFilesDir();
         File imageFile = new File(filesDir, name + ".jpg");
@@ -180,7 +182,7 @@ public class HomeActivity extends AppCompatActivity {
         } catch (Exception e) {
             Log.e(getClass().getSimpleName(), "Error writing bitmap", e);
         }
-    }
+    }*/
 
     private File createImageFile() throws IOException {
         // Create an image file name
