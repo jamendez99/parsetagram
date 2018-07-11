@@ -20,20 +20,27 @@ public class LaunchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_launch);
+        ParseUser user = ParseUser.getCurrentUser();
+        if (user == null) {
+            setContentView(R.layout.activity_launch);
 
-        etUsername = findViewById(R.id.etUsername);
-        etPassword = findViewById(R.id.etPassword);
-        bLogin = findViewById(R.id.bLogin);
+            etUsername = findViewById(R.id.etUsername);
+            etPassword = findViewById(R.id.etPassword);
+            bLogin = findViewById(R.id.bLogin);
 
-        bLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final String username = etUsername.getText().toString();
-                final String password = etPassword.getText().toString();
-                login(username, password);
-            }
-        });
+            bLogin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final String username = etUsername.getText().toString();
+                    final String password = etPassword.getText().toString();
+                    login(username, password);
+                }
+            });
+        } else {
+            Intent intent = new Intent(LaunchActivity.this, HomeActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
     private void login(String username, String password) {
