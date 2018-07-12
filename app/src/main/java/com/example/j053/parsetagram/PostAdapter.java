@@ -1,6 +1,7 @@
 package com.example.j053.parsetagram;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.j053.parsetagram.model.Post;
 import com.parse.ParseFile;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -56,7 +59,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         return mPosts.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder /*implements View.OnClickListener*/ {
+    public void clear() {
+        mPosts.clear();
+        notifyDataSetChanged();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         ImageView ivPicture;
         TextView tvDescription;
@@ -65,11 +73,19 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
             ivPicture = itemView.findViewById(R.id.ivPicture);
             tvDescription = itemView.findViewById(R.id.tvDescription);
+
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            int position = getAdapterPosition();
+            Post post = mPosts.get(position);
+            Intent intent = new Intent(context, DetailsActivity.class);
+            intent.putExtra(DetailsActivity.class.getSimpleName(), Parcels.wrap(post));
+            context.startActivity(intent);
         }
     }
 
-    public void clear() {
-        mPosts.clear();
-        notifyDataSetChanged();
-    }
+
 }

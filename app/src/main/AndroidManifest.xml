@@ -39,7 +39,8 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".TimelineActivity"></activity>
+        <activity android:name=".TimelineActivity" />
+        <activity android:name=".DetailsActivity"></activity>
     </application>
 
 </manifest>
