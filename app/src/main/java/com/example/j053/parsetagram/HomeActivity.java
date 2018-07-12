@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.example.j053.parsetagram.model.Post;
-import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
@@ -24,14 +23,11 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
-    // TODO: change
     private String mImagePath;
     private EditText etDescription;
     private Button btnCreate;
-    private Button btnRefresh;
     private Button btnCapture;
     private Button btnLogout;
     private ImageView ivPreview;
@@ -45,7 +41,6 @@ public class HomeActivity extends AppCompatActivity {
         etDescription = findViewById(R.id.etDescription);
         btnCreate = findViewById(R.id.btnCreate);
         btnCreate.setEnabled(false);
-        btnRefresh = findViewById(R.id.btnRefresh);
         btnCapture = findViewById(R.id.btnCapture);
         btnLogout = findViewById(R.id.btnLogout);
         ivPreview = findViewById(R.id.ivPreview);
@@ -79,15 +74,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-
-
-        btnRefresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loadTopPosts();
-            }
-        });
-
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -108,8 +94,10 @@ public class HomeActivity extends AppCompatActivity {
                 final ParseFile parseFile = new ParseFile(file);
 
                 createPost(description, parseFile, user);
-                etDescription.setText("");
-                HomeActivity.this.recreate();
+
+                Intent intent = new Intent(HomeActivity.this, TimelineActivity.class);
+                setResult(TimelineActivity.RESULT_OK, intent);
+                finish();
             }
         });
 
@@ -147,25 +135,6 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    public void loadTopPosts() {
-        final Post.Query postQuery = new Post.Query();
-        postQuery.getTop().withUser();
-
-        postQuery.findInBackground(new FindCallback<Post>() {
-            @Override
-            public void done(List<Post> objects, ParseException e) {
-                if (e == null) {
-                    for (int i = 0; i < objects.size(); i++) {
-                        Log.d("HomeActivity", "Post [" + i + "] = "
-                                + objects.get(i).getDescription()
-                                + "\nusername = " + objects.get(i).getUser().getUsername());
-                    }
-                } else {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
 
     // Method not used anymore. Used before to create the thumbnail.
     /*

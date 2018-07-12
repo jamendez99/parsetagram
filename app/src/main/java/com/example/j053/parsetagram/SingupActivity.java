@@ -43,7 +43,7 @@ public class SingupActivity extends AppCompatActivity {
                 user.signUpInBackground(new SignUpCallback() {
                     public void done(ParseException e) {
                         if (e == null) {
-                            Intent intent = new Intent(SingupActivity.this, HomeActivity.class);
+                            Intent intent = new Intent(SingupActivity.this, TimelineActivity.class);
                             startActivity(intent);
 
                         } else {

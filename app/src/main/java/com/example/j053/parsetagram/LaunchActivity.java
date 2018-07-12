@@ -48,7 +48,7 @@ public class LaunchActivity extends AppCompatActivity {
                 }
             });
         } else {
-            Intent intent = new Intent(LaunchActivity.this, HomeActivity.class);
+            Intent intent = new Intent(LaunchActivity.this, TimelineActivity.class);
             startActivity(intent);
             finish();
         }
@@ -60,7 +60,7 @@ public class LaunchActivity extends AppCompatActivity {
             public void done(ParseUser user, ParseException e) {
                 if (e == null) {
                     Log.i("LaunchActivity", "Login successful");
-                    final Intent intent = new Intent(LaunchActivity.this, HomeActivity.class);
+                    final Intent intent = new Intent(LaunchActivity.this, TimelineActivity.class);
                     startActivity(intent);
                     finish();
                 } else {
