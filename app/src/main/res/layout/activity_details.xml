@@ -11,6 +11,14 @@
         tools:context=".DetailsActivity">
 
         <ImageView
+            android:id="@+id/ivLike"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/ivPicture"
+            app:srcCompat="@drawable/ufi_heart" />
+
+        <ImageView
             android:id="@+id/ivPicture"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -23,8 +31,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/ivPicture"
+            android:layout_below="@+id/ivLike"
             android:layout_margin="5dp"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/tvLikes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/tvDescription"
             android:text="TextView" />
 
         <TextView
@@ -32,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/tvDescription"
+            android:layout_below="@+id/tvLikes"
             android:text="TextView" />
 
     </RelativeLayout>

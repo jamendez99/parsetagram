@@ -8,6 +8,8 @@ import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,6 +33,7 @@ public class HomeActivity extends AppCompatActivity {
     private Button btnCapture;
     private Button btnLogout;
     private ImageView ivPreview;
+    private MenuItem miActionProgressItem;
     private static final int REQUEST_CODE  = 1;
 
     @Override
@@ -102,6 +105,17 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_home, menu);
+        // Store instance of the menu item containing progress
+        miActionProgressItem = menu.findItem(R.id.miActionProgress);
+        // Extract the action-view from the menu item
+        // ProgressBar v =  (ProgressBar) MenuItemCompat.getActionView(miActionProgressItem);
+        // Return to finish
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
             btnCreate.setEnabled(true);
@@ -120,6 +134,7 @@ public class HomeActivity extends AppCompatActivity {
         post.setImage(image);
         post.setUser(user);
 
+        miActionProgressItem.setVisible(true);
         post.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -128,6 +143,7 @@ public class HomeActivity extends AppCompatActivity {
 
                     Intent intent = new Intent();
                     setResult(TimelineActivity.RESULT_OK, intent);
+                    miActionProgressItem.setVisible(false);
                     finish();
                 } else {
                     e.printStackTrace();
