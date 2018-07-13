@@ -2,6 +2,7 @@ package com.example.j053.parsetagram;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -67,7 +68,7 @@ public class TimelineActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(TimelineActivity.this, HomeActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE);
             }
         });
 
@@ -105,8 +106,8 @@ public class TimelineActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         refresh();
     }
 }

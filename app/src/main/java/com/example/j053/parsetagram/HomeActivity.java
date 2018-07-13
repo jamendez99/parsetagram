@@ -95,9 +95,6 @@ public class HomeActivity extends AppCompatActivity {
 
                 createPost(description, parseFile, user);
 
-                Intent intent = new Intent(HomeActivity.this, TimelineActivity.class);
-                setResult(TimelineActivity.RESULT_OK, intent);
-                finish();
             }
         });
 
@@ -128,6 +125,10 @@ public class HomeActivity extends AppCompatActivity {
             public void done(ParseException e) {
                 if (e == null) {
                     Log.d("HomeActivity", "Created post successfully");
+
+                    Intent intent = new Intent();
+                    setResult(TimelineActivity.RESULT_OK, intent);
+                    finish();
                 } else {
                     e.printStackTrace();
                 }
